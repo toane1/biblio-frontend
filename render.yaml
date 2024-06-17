@@ -1,0 +1,7 @@
+services:
+  - name: biblio-front
+    type: web
+    buildCommand: docker build -t my-expo-app .
+    startCommand: docker run -p 19000:19000 my-expo-app
+    dockerfilePath: Dockerfile
+    runtime: docker
