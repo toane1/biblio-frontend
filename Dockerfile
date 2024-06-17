@@ -13,12 +13,6 @@ RUN npm install
 # Installer Expo CLI globalement
 RUN npm install -g expo-cli
 
-# Mettre à jour les dépôts apt-get et installer watchman
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends watchman \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
 # Copier tout le reste du code de l'application dans le conteneur
 COPY . .
 
