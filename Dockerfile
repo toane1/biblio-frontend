@@ -13,15 +13,16 @@ RUN npm install
 # Installer Expo CLI globalement
 RUN npm install -g expo-cli
 
-# Installer des dépendances supplémentaires requises pour Expo
-RUN apt-get update && apt-get install -y \
-    watchman \
-    && rm -rf /var/lib/apt/lists/*
+# Mettre à jour les dépôts apt-get et installer watchman
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends watchman \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 # Copier tout le reste du code de l'application dans le conteneur
 COPY . .
 
-# Exposer le port que votre application Expo utilise
+# Exposer les ports que votre application Expo utilise
 EXPOSE 19000 19001 19002
 
 # Définir la commande par défaut pour démarrer l'application

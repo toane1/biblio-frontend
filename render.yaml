@@ -1,7 +1,7 @@
 services:
   - name: biblio-front
     type: web
-    buildCommand: docker build -t npm install .
-    startCommand: docker run -p 19000:19000 biblio
+    buildCommand: docker build -t my-expo-app .
+    startCommand: docker run -it -p 19000:19000 -p 19001:19001 -p 19002:19002 my-expo-app
     dockerfilePath: Dockerfile
     runtime: docker
