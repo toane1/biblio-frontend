@@ -17,8 +17,8 @@ export default function BottomNavigator() {
     const [routes] = React.useState([
         {key: 'home', title: 'Accueil', focusedIcon: 'heart', unfocusedIcon: 'heart-outline'},
         {key: 'profil', title: 'Profil', focusedIcon: 'account', unfocusedIcon: 'account-outline'},
-        {key: 'book', title: 'Plant', focusedIcon: 'sprout', unfocusedIcon: 'book'},
-        {key: 'borrow', title: 'Pret', focusedIcon: 'home-circle', unfocusedIcon: 'hands-helping'},
+        {key: 'book', title: 'Plant', focusedIcon: 'book', unfocusedIcon: 'book'},
+        {key: 'borrow', title: 'Pret', focusedIcon: 'hands-helping', unfocusedIcon: 'hands-helping'},
     ]);
 
     React.useEffect(() => {
