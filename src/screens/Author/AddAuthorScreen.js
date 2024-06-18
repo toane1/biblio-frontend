@@ -9,7 +9,7 @@ const AddAuthorScreen = ({ navigation }) => {
     lastName: Yup.string().required('Le nom de l\'auteur est nécessaire'),
   });
 
-  const handleSubmit = async (values) => {
+  const handleAddSubmit = async (values) => {
     try {
       const response = await axios.post('https://biblio-oxgk.onrender.com/api/authors/post', {
         firstName: values.firstName,
@@ -28,7 +28,7 @@ const AddAuthorScreen = ({ navigation }) => {
     <Formik
       initialValues={{ firstName: '', lastName: '' }}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={handleAddSubmit}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
         <View style={styles.container}>
@@ -50,7 +50,7 @@ const AddAuthorScreen = ({ navigation }) => {
           />
           {touched.lastName && errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
 
-          <Button onPress={handleSubmit} title="Ajouter" />
+          <Button onPress={handleAddSubmit} title="Ajouter l'auteur" />
         </View>
       )}
     </Formik>
