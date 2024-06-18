@@ -11,7 +11,7 @@ import {
 import axios from 'axios';
 
 const GenreDetailScreen = ({ route }) => {
-  const { author } = route.params;
+  const { genre } = route.params;
   const [wikiData, setWikiData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

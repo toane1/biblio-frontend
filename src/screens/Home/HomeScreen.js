@@ -6,8 +6,8 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text>Bienvenue dans ma bibliothèque</Text>
       <Button
-        title="Ajouter un livre"
-        onPress={() => navigation.navigate('CreateBook')}
+        title="Consulter les livres"
+        onPress={() => navigation.navigate('Books')}
       />
       <Button
         title="Consulter la liste des auteurs"

@@ -2,7 +2,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/Home/HomeScreen';
-import CreateBookScreen from '../screens/Book/CreateBookScreen';
 import AddAuthorScreen from "../screens/Author/AddAuthorScreen";
 import AuthorDetailScreen from "../screens/Author/AuthoDetailScreen"
 import AddGenreScreen from "../screens/Genre/AddGenreScreen";
@@ -11,7 +10,10 @@ import GenreDetailScreen from "../screens/Genre/GenreDetailScreen";
 import EditGenreScreen from "../screens/Genre/EditGenreScreen";
 import AuthorListScreen from "../screens/Author/AuthorListScreen";
 import EditAuthorScreen from "../screens/Author/EditAuthorScreen";
-
+import AddBookScreen from "../screens/Book/AddBookScreen";
+import BookListScreen from "../screens/Book/BookListScreen";
+import BookDetailScreen from "../screens/Book/BookDetailScreen";
+import EditBookScreen from "../screens/Book/EditBookScreen";
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
@@ -19,7 +21,6 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="CreateBook" component={CreateBookScreen} />
 
         <Stack.Screen name="AddAuthor" component={AddAuthorScreen} />
         <Stack.Screen name="Authors" component={AuthorListScreen} />
@@ -30,6 +31,11 @@ const AppNavigator = () => {
         <Stack.Screen name="Genres" component={GenreListScreen} />
         <Stack.Screen name="GenreDetail" component={GenreDetailScreen} />
         <Stack.Screen name="EditGenre" component={EditGenreScreen} />
+
+        <Stack.Screen name="AddBook" component={AddBookScreen} />
+        <Stack.Screen name="Books" component={BookListScreen} />
+        <Stack.Screen name="BookDetail" component={BookDetailScreen} />
+        <Stack.Screen name="EditBook" component={EditBookScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
