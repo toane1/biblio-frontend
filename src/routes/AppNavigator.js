@@ -14,6 +14,7 @@ import AddBookScreen from "../screens/Book/AddBookScreen";
 import BookListScreen from "../screens/Book/BookListScreen";
 import BookDetailScreen from "../screens/Book/BookDetailScreen";
 import EditBookScreen from "../screens/Book/EditBookScreen";
+import BookListByGenre from "../screens/Book/BookListByGenre";
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
@@ -34,6 +35,7 @@ const AppNavigator = () => {
 
         <Stack.Screen name="AddBook" component={AddBookScreen} />
         <Stack.Screen name="Books" component={BookListScreen} />
+        <Stack.Screen name="BooksByGenre" component={BookListByGenre} />
         <Stack.Screen name="BookDetail" component={BookDetailScreen} />
         <Stack.Screen name="EditBook" component={EditBookScreen} />
 

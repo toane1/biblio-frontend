@@ -10,6 +10,10 @@ const HomeScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('Books')}
       />
       <Button
+        title="Consulter les livres par genre"
+        onPress={() => navigation.navigate('BooksByGenre')}
+      />
+      <Button
         title="Consulter la liste des auteurs"
         onPress={() => navigation.navigate('Authors')}
       />
