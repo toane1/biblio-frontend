@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Button } from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Button, Modal} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
@@ -14,35 +14,40 @@ const AddBookScreen = ({ route }) => {
   const [genres, setGenres] = useState([]);
   const [selectedAuthor, setSelectedAuthor] = useState('');
   const [selectedGenres, setSelectedGenres] = useState([]);
+  const [newAuthorFirstName, setNewAuthorFirstName] = useState('');
+  const [newAuthorLastName, setNewAuthorLastName] = useState('');
+  const [isAuthorModalVisible, setAuthorModalVisible] = useState(false);
+  const [isGenreModalVisible, setGenreModalVisible] = useState(false);
+  const [newGenreGenre, setNewGenreGenre] = useState('');
   const navigation = useNavigation();
 
+  const fetchAuthors = async () => {
+    try {
+      const response = await fetch('https://biblio-oxgk.onrender.com/api/authors');
+      if (!response.ok) {
+        throw new Error('Failed to fetch authors');
+      }
+      const data = await response.json();
+      const sortedAuthors = data.sort((a, b) => a.lastName.localeCompare(b.lastName));
+      setAuthors(sortedAuthors);
+    } catch (error) {
+      console.error('Error fetching authors:', error);
+    }
+  };
+
+  const fetchGenres = async () => {
+    try {
+      const response = await fetch('https://biblio-oxgk.onrender.com/api/genres');
+      if (!response.ok) {
+        throw new Error('Failed to fetch genres');
+      }
+      const data = await response.json();
+      setGenres(data);
+    } catch (error) {
+      console.error('Error fetching genres:', error);
+    }
+  };
   useEffect(() => {
-    const fetchAuthors = async () => {
-      try {
-        const response = await fetch('https://biblio-oxgk.onrender.com/api/authors');
-        if (!response.ok) {
-          throw new Error('Failed to fetch authors');
-        }
-        const data = await response.json();
-        setAuthors(data);
-      } catch (error) {
-        console.error('Error fetching authors:', error);
-      }
-    };
-
-    const fetchGenres = async () => {
-      try {
-        const response = await fetch('https://biblio-oxgk.onrender.com/api/genres');
-        if (!response.ok) {
-          throw new Error('Failed to fetch genres');
-        }
-        const data = await response.json();
-        setGenres(data);
-      } catch (error) {
-        console.error('Error fetching genres:', error);
-      }
-    };
-
     fetchAuthors();
     fetchGenres();
   }, []);
@@ -64,8 +69,6 @@ const AddBookScreen = ({ route }) => {
         Alert.alert('Champs requis', 'Veuillez remplir tous les champs avant d\'ajouter le livre.');
         return;
       }
-
-
       const authorPayload = {
       };
       try {
@@ -131,6 +134,57 @@ const AddBookScreen = ({ route }) => {
     }
   };
 
+  const handleAddAuthor = async () => {
+    if(newAuthorFirstName && newAuthorLastName){
+      try {
+        const response = await axios.post('https://biblio-oxgk.onrender.com/api/authors', {
+          firstName: newAuthorFirstName,
+          lastName: newAuthorLastName,
+        });
+
+        if (response.status !== 200) {
+          throw new Error('Failed to add author');
+        }
+        const newAuthor = response.data;
+        Alert.alert('Auteur ajouté', 'L\'auteur a été ajouté avec succès.');
+        setAuthorModalVisible(false); // Fermer la modal
+        setSelectedAuthor(newAuthor.authorId);
+        setNewAuthorFirstName(''); // Réinitialiser les champs du formulaire
+        setNewAuthorLastName('');
+        fetchAuthors(); // Rafraîchir la liste des auteurs
+
+      } catch (error) {
+        console.error('Error adding author:', error);
+        Alert.alert('Erreur', 'Une erreur est survenue lors de l\'ajout de l\'auteur.');
+      }
+    }else {
+      alert("Tous les champs doivent être renseignés");
+    }
+  };
+  const handleAddGenre = async () => {
+    if(newGenreGenre){
+      try {
+        const response = await axios.post('https://biblio-oxgk.onrender.com/api/genres', {
+          genre: newGenreGenre,
+        });
+        if (response.status !== 200) {
+          throw new Error('Failed to add author');
+        }
+        const newGenre = response.data;
+        Alert.alert('Genre ajouté', 'Le genre a été ajouté avec succès.');
+        setGenreModalVisible(false); // Fermer la modal
+        setNewGenreGenre('');
+        toggleGenre(newGenre.genreId);
+        await fetchGenres();
+
+      } catch (error) {
+        console.error('Error adding genre:', error);
+        Alert.alert('Erreur', 'Une erreur est survenue lors de l\'ajout du genre');
+      }
+    }else {
+      alert("Le nouveau genre doit être renseigné.");
+    }
+  };
   const toggleGenre = (genreId) => {
     const index = selectedGenres.indexOf(genreId);
     if (index !== -1) {
@@ -168,16 +222,19 @@ const AddBookScreen = ({ route }) => {
         placeholder="Entrez le titre du livre"
       />
       <Text><Text style={styles.label}>Auteur:</Text></Text>
-      <Picker
-        selectedValue={selectedAuthor}
-        style={styles.picker}
-        onValueChange={(itemValue) => setSelectedAuthor(itemValue)}
-      >
-        <Picker.Item label="Sélectionnez un auteur" value="" />
-        {authors.map(author => (
-          <Picker.Item key={author.authorId} label={`${author.firstName} ${author.lastName}`} value={author.authorId} />
-        ))}
-      </Picker>
+      <View style={styles.row}>
+        <Picker
+          selectedValue={selectedAuthor}
+          style={styles.picker}
+          onValueChange={(itemValue) => setSelectedAuthor(itemValue)}
+        >
+          <Picker.Item label="Sélectionnez un auteur" value="" />
+          {authors.map(author => (
+            <Picker.Item key={author.authorId} label={`${author.firstName} ${author.lastName}`} value={author.authorId} />
+          ))}
+        </Picker>
+        <Button title="Ajouter Auteur" onPress={() => setAuthorModalVisible(true)} />
+      </View>
       <Text><Text style={styles.label}>ISBN:</Text></Text>
       <TextInput
         style={styles.input}
@@ -192,9 +249,57 @@ const AddBookScreen = ({ route }) => {
         onChangeText={setPublicationDate}
         placeholder="Entrez la date de publication (YYYY-MM-DD)"
       />
-      <Text><Text style={styles.label}>Genres:</Text></Text>
+
+      <View style={styles.row}>
+        <Text><Text style={styles.label}>Genres:</Text></Text>
+
+        <Button title="Ajouter Genre" onPress={() => setGenreModalVisible(true)} />
+      </View>
       {renderGenresCheckboxes()}
+
       <Button onPress={handleSaveBook} title="Mettre à jour le livre" />
+
+      <Modal
+        visible={isAuthorModalVisible}
+        animationType="slide"
+        onRequestClose={() => setAuthorModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Ajouter un Auteur</Text>
+          <TextInput
+            style={styles.input}
+            value={newAuthorFirstName}
+            onChangeText={setNewAuthorFirstName}
+            placeholder="Prénom"
+          />
+          <TextInput
+            style={styles.input}
+            value={newAuthorLastName}
+            onChangeText={setNewAuthorLastName}
+            placeholder="Nom"
+          />
+          <Button title="Enregistrer" onPress={handleAddAuthor} />
+          <Button title="Annuler" onPress={() => setAuthorModalVisible(false)} />
+        </View>
+      </Modal>
+
+      <Modal
+        visible={isGenreModalVisible}
+        animationType="slide"
+        onRequestClose={() => setGenreModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Ajouter un Genre</Text>
+          <TextInput
+            style={styles.input}
+            value={newGenreGenre}
+            onChangeText={setNewGenreGenre}
+            placeholder="Genre"
+          />
+          <Button title="Enregistrer" onPress={handleAddGenre} />
+          <Button title="Annuler" onPress={() => setGenreModalVisible(false)} />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -221,6 +326,11 @@ const styles = StyleSheet.create({
   picker: {
     borderWidth: 1,
     borderColor: '#ccc',
+    marginBottom: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
   },
   checkboxRow: {

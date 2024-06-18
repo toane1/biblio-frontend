@@ -20,7 +20,9 @@ const AuthorListScreen = ({ navigation, route }) => {
   const fetchAuthors = useCallback(async () => {
     try {
       const response = await axios.get('https://biblio-oxgk.onrender.com/api/authors');
-      setAuthors(response.data);
+      const data = response.data;
+      const sortedAuthors = data.sort((a, b) => a.lastName.localeCompare(b.lastName));
+      setAuthors(sortedAuthors);
     } catch (error) {
       setError(error);
     } finally {
