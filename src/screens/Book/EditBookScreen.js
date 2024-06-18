@@ -221,6 +221,7 @@ const AddBookScreen = ({ route }) => {
         onChangeText={setTitle}
         placeholder="Entrez le titre du livre"
       />
+
       <Text><Text style={styles.label}>Auteur:</Text></Text>
       <View style={styles.row}>
         <Picker
@@ -235,6 +236,7 @@ const AddBookScreen = ({ route }) => {
         </Picker>
         <Button title="Ajouter Auteur" onPress={() => setAuthorModalVisible(true)} />
       </View>
+
       <Text><Text style={styles.label}>ISBN:</Text></Text>
       <TextInput
         style={styles.input}
@@ -324,6 +326,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   picker: {
+    flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
     marginBottom: 10,

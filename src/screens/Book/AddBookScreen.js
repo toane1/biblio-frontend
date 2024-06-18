@@ -214,6 +214,7 @@ const AddBookScreen = () => {
         onChangeText={setPublicationDate}
         placeholder="Entrez l'année de publication"
       />
+
       <Text><Text style={styles.label}>Auteur:</Text></Text>
       <View style={styles.row}>
         <Picker
@@ -228,6 +229,7 @@ const AddBookScreen = () => {
         </Picker>
         <Button title="Ajouter Auteur" onPress={() => setAuthorModalVisible(true)} />
       </View>
+
       <Text><Text style={styles.label}>ISBN:</Text></Text>
       <TextInput
         style={styles.input}

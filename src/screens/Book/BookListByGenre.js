@@ -98,7 +98,7 @@ const BookListByGenreScreen = ({ navigation }) => {
         <Text>Sélectionner un genre :</Text>
         <Picker
           selectedValue={selectedGenre}
-          style={{ height: 50, width: 200 }}
+          style={styles.picker}
           onValueChange={(itemValue) => setSelectedGenre(itemValue)}
         >
           <Picker.Item label="Tous les genres" value={null} />
@@ -155,6 +155,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 10,
+  },
+  picker: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 10,
   },
   footer: {
     flexDirection: 'row',
