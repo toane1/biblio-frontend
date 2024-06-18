@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+
 const AddAuthorScreen = ({ navigation }) => {
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('Le prénom de l\'auteur est nécessaire'),
@@ -11,7 +12,7 @@ const AddAuthorScreen = ({ navigation }) => {
 
   const handleAddSubmit = async (values) => {
     try {
-      const response = await axios.post('https://biblio-oxgk.onrender.com/api/authors/post', {
+      const response = await axios.post('https://biblio-oxgk.onrender.com/api/authors', {
         firstName: values.firstName,
         lastName: values.lastName,
       });
@@ -21,8 +22,6 @@ const AddAuthorScreen = ({ navigation }) => {
       console.error('Il y a une erreur sur la création de cet auteur!', error);
     }
   };
-
-
 
   return (
     <Formik
@@ -34,7 +33,7 @@ const AddAuthorScreen = ({ navigation }) => {
         <View style={styles.container}>
           <TextInput
             style={styles.input}
-            placeholder="prénom"
+            placeholder="Prénom"
             onChangeText={handleChange('firstName')}
             onBlur={handleBlur('firstName')}
             value={values.firstName}
@@ -50,7 +49,7 @@ const AddAuthorScreen = ({ navigation }) => {
           />
           {touched.lastName && errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
 
-          <Button onPress={handleAddSubmit} title="Ajouter l'auteur" />
+          <Button onPress={handleSubmit} title="Ajouter l'auteur" />
         </View>
       )}
     </Formik>
