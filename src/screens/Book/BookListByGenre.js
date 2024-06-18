@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Button, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {Alert, Button, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import axios from 'axios';
+import { Picker } from '@react-native-picker/picker'; // Importer le Picker
 
-const BookListByGenreScreen = ({ navigation, route }) => {
+const BookListByGenreScreen = ({ navigation }) => {
   const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
 
@@ -27,41 +26,22 @@ const BookListByGenreScreen = ({ navigation, route }) => {
   };
 
   const fetchBooksByGenre = async () => {
-    if (selectedGenre) {
-      try {
-        const response = await axios.get(`https://biblio-oxgk.onrender.com/api/books/genre/${selectedGenre}`);
-        setBooks(response.data);
-      } catch (error) {
-        console.error(`Error fetching books by genre ${selectedGenre}:`, error);
-        setBooks([]);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      // Si aucun genre sélectionné, afficher tous les livres
-      fetchBooks();
-    }
-  };
-
-  const fetchBooks = async () => {
     try {
-      const response = await axios.get('https://biblio-oxgk.onrender.com/api/books');
+      if(selectedGenre ==="Tous les genres"){
+        setSelectedGenre(null);
+      }
+      const url = selectedGenre
+        ? `https://biblio-oxgk.onrender.com/api/books/genre/${selectedGenre}`
+        : 'https://biblio-oxgk.onrender.com/api/books';
+
+      const response = await axios.get(url);
       setBooks(response.data);
     } catch (error) {
-      setError(error);
+      console.error(`Error fetching books by genre ${selectedGenre}:`, error);
+      setBooks([]);
     } finally {
-      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    return navigation.addListener('focus', () => {
-      if (route.params?.refresh) {
-        fetchBooks();
-      }
-    });
-  }, []);
 
   const handleDelete = async (bookId) => {
     try {
@@ -90,6 +70,12 @@ const BookListByGenreScreen = ({ navigation, route }) => {
     navigation.navigate('Home');
   };
 
+  const renderPickerItems = () => {
+    return genres.map(genre => (
+      <Picker.Item key={genre.genreId} label={genre.genre} value={genre.genreId} />
+    ));
+  };
+
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handlePress(item)}>
       <View style={styles.bookContainer}>
@@ -106,22 +92,18 @@ const BookListByGenreScreen = ({ navigation, route }) => {
     </TouchableOpacity>
   );
 
-  const renderGenreItem = ({ item }) => (
-    <TouchableOpacity onPress={() => setSelectedGenre(item.genreId)}>
-      <Text>{item.genre}</Text>
-    </TouchableOpacity>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.dropdownContainer}>
         <Text>Sélectionner un genre :</Text>
-        <FlatList
-          data={genres}
-          renderItem={renderGenreItem}
-          keyExtractor={(item) => item.genreId.toString()}
-          horizontal
-        />
+        <Picker
+          selectedValue={selectedGenre}
+          style={{ height: 50, width: 200 }}
+          onValueChange={(itemValue) => setSelectedGenre(itemValue)}
+        >
+          <Picker.Item label="Tous les genres" value={null} />
+          {renderPickerItems()}
+        </Picker>
       </View>
       <FlatList
         data={books}
@@ -151,47 +133,36 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   listContent: {
     paddingBottom: 100,
     paddingHorizontal: 8,
     paddingTop: 8,
   },
-  card: {
-    backgroundColor: '#f8f9fa',
-    padding: 15,
-    marginVertical: 10,
-    marginHorizontal: 20,
-    borderRadius: 8,
-    elevation: 3,
+  bookContainer: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
-  authorName: {
+  bookTitle: {
     fontSize: 18,
     fontWeight: 'bold',
   },
+  authorName: {
+    fontSize: 16,
+    fontStyle: 'italic',
+  },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginTop: 10,
   },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    margin: 20,
-  },
   footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 20,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    backgroundColor: '#fff',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
   },
 });
 
