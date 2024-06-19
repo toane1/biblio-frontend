@@ -46,8 +46,8 @@ const GenreListScreen = ({ navigation, route }) => {
       setGenres(genres.filter(genre => genre.genreId !== genreId));
       Alert.alert('Succès', 'Genre supprimé avec succès');
     } catch (error) {
-      console.error('Erreur lors de la suppression du genre :', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression du genre');
+      Alert.alert('Echec', error.response.data);
+      console.error('Erreur lors de la suppression du genre :', error.response.data);
     }
   };
 
