@@ -6,61 +6,27 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  Linking
+  Linking, SafeAreaView, TextInput, Button
 } from 'react-native';
 import axios from 'axios';
 
-const GenreDetailScreen = ({ route }) => {
+const GenreDetailScreen = ({ route, navigation }) => {
   const { genre } = route.params;
-  const [wikiData, setWikiData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchWikiData = async () => {
-      try {
-        const authorName = `${author.lastName} ${author.firstName} `;
-        const response = await axios.get(`https://fr.wikipedia.org/api/rest_v1/page/author/${encodeURIComponent(authorName)}`);
-        setWikiData(response.data);
-      } catch (error) {
-        setError(error);
-        Alert.alert('Erreur', 'Il y a eu une erreur lors de la récupération des données de Wikipedia');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWikiData();
-  }, [author]);
-
-  if (loading) {
-    return (
-      <View style={styles.centeredContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.centeredContainer}>
-        <Text style={styles.errorText}>Erreur lors de la récupération des données de Wikipedia</Text>
-      </View>
-    );
-  }
+  const handleGoBack = async () => {
+    navigation.navigate('Genres', { refresh: true });
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.authorName}>{author.firstName} {author.lastName}</Text>
-      {wikiData && (
-        <>
-          <Text style={styles.description}>{wikiData.extract}</Text>
-          <Text style={styles.sourceLink}>
-            Source: <Text style={styles.link} onPress={() => Linking.openURL(wikiData.content_urls?.desktop?.page)}>{wikiData.content_urls?.desktop?.page}</Text>
-          </Text>
-        </>
-      )}
-    </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.form}>
+        <Text>
+          <Text style={styles.label}>Genre:</Text>
+          {genre.genre}
+        </Text>
+        <Button title="Retour à la liste de Genres" onPress={handleGoBack} />
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -70,32 +36,24 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  form: {
+    marginVertical: 20,
   },
-  authorName: {
-    fontSize: 24,
+  label: {
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginVertical: 10,
   },
-  description: {
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 8,
     fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 20,
-  },
-  sourceLink: {
-    fontSize: 14,
-    color: '#0000ff',
   },
   errorText: {
     color: 'red',
     marginTop: 10,
-  },
-  link: {
-    color: '#0000ff',
-    textDecorationLine: 'underline',
   },
 });
 

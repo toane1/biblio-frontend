@@ -47,7 +47,7 @@ const AuthorListScreen = ({ navigation, route }) => {
       setAuthors(authors.filter(author => author.authorId !== authorId));
       Alert.alert('Success', 'L\'auteur a bien été supprimé');
     } catch (error) {
-      Alert.alert('Error', 'Une erreur a eu lieu lors de la suppression de l\'auteur');
+      Alert.alert('Echec', error.response.data);
       console.error('Une erreur a eu lieu lors de la suppression de l\'auteur', error);
     }
   };

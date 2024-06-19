@@ -50,6 +50,9 @@ const GenreListScreen = ({ navigation, route }) => {
       console.error('Erreur lors de la suppression du genre :', error.response.data);
     }
   };
+  const handleDetail = (genre) => {
+    navigation.navigate('GenreDetail', { genre: genre });
+  }
 
   const handleEdit = (genre) => {
     navigation.navigate('EditGenre', { genreInitial: genre });
@@ -80,7 +83,7 @@ const GenreListScreen = ({ navigation, route }) => {
   }
 
   const renderGenre = ({ item }) => (
-    <TouchableOpacity onPress={() => handleEdit(item)}>
+    <TouchableOpacity onPress={() => handleDetail(item)}>
       <View style={styles.card}>
         <Text style={styles.genreText}>{item.genre}</Text>
         <View style={styles.buttonContainer}>
